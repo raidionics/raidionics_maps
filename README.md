@@ -48,7 +48,7 @@ Below are Jupyter Notebooks including simple examples on how to get started.
 ### [Usage](https://github.com/dbouget/raidionics_maps#usage)
 
 In the following, a description of how the data should be organized on disk is provided, and a test dataset can
-be downloaded [here](https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsValLib_UnitTest1.zip).
+be downloaded [here](https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsMaps_UnitTest1.zip).
 
 <details>
 <summary>
@@ -169,13 +169,13 @@ An example of its content is given below when **not** using an index-based namin
 <details>
 <summary>
 
-### [2. Installation](https://github.com/dbouget/validation_metrics_computation#2-installation)
+### [Installation](https://github.com/dbouget/raidionics_maps#installation)
 </summary>
 Create a virtual environment using at least Python 3.8, and install all dependencies from
 the requirements.txt file.
 
 ```
-  cd /path/to/validation_metrics_computation  
+  cd /path/to/raidionics_maps  
   virtualenv -p python3 venv  
   source venv/bin/activate  
   TMPDIR=$PWD/venv pip install --cache-dir=$PWD/venv -r requirements.txt (--no-deps)
@@ -183,7 +183,7 @@ the requirements.txt file.
 
 Then the final step is to do the following in a terminal.
 ```
-  cd /path/to/validation_metrics_computation  
+  cd /path/to/raidionics_maps  
   cp blank_main_config.ini main_config.ini 
 ```
 
@@ -196,7 +196,7 @@ found in _/Utils/resources.py_.
 <details>
 <summary>
 
-### [3. Process](https://github.com/dbouget/validation_metrics_computation#3-process)
+### [Process](https://github.com/dbouget/raidionics_maps#process)
 </summary>
 To run, you need to supply the configuration file as parameter.
 
@@ -210,7 +210,7 @@ N.B. If no study fits your need, you can create a new study file in _/Studies/_.
 
 </details>
 
-## [How to cite](https://github.com/dbouget/validation_metrics_computation#how-to-cite)
+## [How to cite](https://github.com/dbouget/raidionics_maps#how-to-cite)
 
 If you are using Raidionics in your research, please cite the following references.
 
