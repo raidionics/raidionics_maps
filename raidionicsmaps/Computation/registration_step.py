@@ -143,10 +143,15 @@ class RegistrationStep():
                                                                                   moving=self._moving_volume_filepath,
                                                                                   interpolation='linear')
             shutil.move(reg_input_fn, os.path.join(self.patient_parameters.output_folderpath, 'input_reg_mni.nii.gz'))
-            moving_filepath = self.patient_parameters._label_filepaths
+            self.patient_parameters.registered_volume_filepaths = os.path.join(self.patient_parameters.output_folderpath,
+                                                                               'input_reg_mni.nii.gz')
+            moving_filepath = self.patient_parameters.label_filepaths
             reg_anno_fn = self._registration_runner.apply_registration_transform(fixed=self._fixed_volume_filepath,
                                                                                  moving=moving_filepath)
-            shutil.move(reg_anno_fn, os.path.join(self.patient_parameters.output_folderpath, 'input_reg_mni_' + SharedResources.getInstance().maps_gt_files_suffix))
+            reg_base_name = 'input_reg_mni_' + SharedResources.getInstance().maps_gt_files_suffix
+            shutil.move(reg_anno_fn, os.path.join(self.patient_parameters.output_folderpath, reg_base_name))
+            self.patient_parameters.registered_label_filepaths = os.path.join(self.patient_parameters.output_folderpath,
+                                                                              reg_base_name)
         except Exception as e:
             logging.error("[RegistrationStep] Apply registration failed with: {}.".format(traceback.format_exc()))
             self._registration_runner.clear_cache()

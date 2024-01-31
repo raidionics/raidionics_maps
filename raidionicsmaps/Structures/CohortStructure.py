@@ -7,12 +7,12 @@ from .PatientStructure import Patient
 
 class Cohort:
     """
-
+    Structure for holding all information about a patient cohort.
     """
-    _unique_id = ""  # Internal unique identifier for the patient
-    _input_folderpath = None
-    _output_folderpath = None
-    _patients = {}
+    _unique_id = ""  # Internal unique identifier for the cohort
+    _input_folderpath = None  # Path containing the input data
+    _output_folderpath = None  # Path where the computed results will be stored
+    _patients = {}  # Dictionary holding all patients belonging to the cohort, as PatientStructure objects
 
     def __init__(self, id: str, input_folder: str, output_folder: str) -> None:
         """
@@ -29,7 +29,7 @@ class Cohort:
 
         self.__init_from_disk()
 
-    def __reset(self):
+    def __reset(self) -> None:
         """
         All objects share class or static variables.
         An instance or non-static variables are different for different objects (every object has a copy).
@@ -51,7 +51,12 @@ class Cohort:
     def patients(self) -> Dict[str, Patient]:
         return self._patients
 
-    def __init_from_disk(self):
+    def __init_from_disk(self) -> None:
+        """
+        Parses the input folder to identify all patients belonging to the cohort.
+        An internal PatientStructure instance is created for each patient.
+        :return: None
+        """
         patient_dirs = []
         for _, dirs, _ in os.walk(self.input_folderpath):
             for d in dirs:

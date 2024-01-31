@@ -11,7 +11,7 @@ def compute(config_filename: str, logging_filename: str = None) -> None:
 
     :param config_filename: Filepath to the *.ini with the user-specific runtime parameters
     :param logging_filename: Filepath to an external file used for logging events (e.g., the Raidionics .log)
-    :return:
+    :return: None
     """
     try:
         SharedResources.getInstance().set_environment(config_filename=config_filename)
@@ -49,6 +49,9 @@ def compute(config_filename: str, logging_filename: str = None) -> None:
             processor = HeatmapComputationProcessor()
             processor.setup(cohort)
             processor.run()
+        else:
+            logging.warning("The requested task, with value {}, has not been implemented.\n"
+                            "Please make sure to select a valid task!".format(task))
     except Exception as e:
         print('Compute could not proceed. Issue arose during task {}. Collected: \n'.format(task))
         print('{}'.format(traceback.format_exc()))

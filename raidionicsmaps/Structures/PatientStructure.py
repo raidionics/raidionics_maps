@@ -9,16 +9,19 @@ from .RegistrationStructure import Registration
 
 
 class Patient:
+    """
+
+    """
     _unique_id = ""  # Internal unique identifier for the patient
-    _patient_id = ""  # Unique identifier for the patient (might be multiple times the same patient in different folds)
-    _input_folderpath = None
-    _output_folderpath = None
-    _volume_filepaths = None
-    _label_filepaths = None
-    _registered_volume_filepaths = None
-    _registered_label_filepaths = None
-    _class_names = []
-    _registrations = {}
+    _patient_id = ""  # Identifier for the patient based off the folder name
+    _input_folderpath = None  # Folder containing the raw patient data
+    _output_folderpath = None  # Folder containing the generated patient data
+    _volume_filepaths = None  # Filepath to the input radiological volume
+    _label_filepaths = None  # Filepath to the input annotation mask
+    _registered_volume_filepaths = None  # Filepath for the generated atlas-registered radiological volume
+    _registered_label_filepaths = None  # Filepath for the generated atlas-registered annotation mask
+    _class_names = []  # Not used for now
+    _registrations = {}  # Dictionary containing a RegistrationStructure with the transformation info for each registration, if multiple atlases are used over time
 
     def __init__(self, id: str, patient_id: str, input_folder: str) -> None:
         """
@@ -39,7 +42,7 @@ class Patient:
 
         self.__init_from_disk()
 
-    def __reset(self):
+    def __reset(self) -> None:
         """
         All objects share class or static variables.
         An instance or non-static variables are different for different objects (every object has a copy).
@@ -115,7 +118,7 @@ class Patient:
     def registrations(self) -> dict:
         return self._registrations
 
-    def __init_from_disk(self):
+    def __init_from_disk(self) -> None:
         """
         Iterating through the patient folder to identify the content.
         """
@@ -177,5 +180,5 @@ class Patient:
                 if os.path.exists(reg_labels_fn):
                     self.registered_label_filepaths = reg_labels_fn
 
-    def include_registration(self, reg_uid, registration):
+    def include_registration(self, reg_uid: str, registration: Registration) -> None:
         self.registrations[reg_uid] = registration

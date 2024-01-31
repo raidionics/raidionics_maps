@@ -7,10 +7,8 @@ import numpy as np
 import csv
 import sys
 import os
-import scipy.ndimage.morphology as smo
 import scipy.ndimage.measurements as smeas
-from scipy.ndimage import binary_opening, measurements, binary_closing, binary_erosion, binary_dilation, \
-    generate_binary_structure
+from scipy.ndimage import measurements
 from skimage.measure import regionprops
 from tqdm import tqdm
 import nibabel as nib
@@ -22,10 +20,10 @@ class HeatmapComputationProcessor:
     """
 
     """
-    _cohort = None
-    _mask_filenames = []
-    _suffix = ""
-    _output_folder = None
+    _cohort = None  # Placeholder for all loaded patients belonging to the cohort of interest
+    _mask_filenames = []  # List of strings indicating the filepaths for all annotation masks to use to generate the location heatmap
+    _suffix = ""  # Specific name to append to the generated heatmap files
+    _output_folder = None  # Path designated the folder where all the computed results are to be stored
 
     def __init__(self, suffix=""):
         self.__reset()
@@ -50,22 +48,22 @@ class HeatmapComputationProcessor:
         self._mask_filenames = filenames
 
     @property
-    def suffix(self):
+    def suffix(self) -> str:
         return self._suffix
 
     @suffix.setter
-    def suffix(self, s) -> None:
+    def suffix(self, s: str) -> None:
         self._suffix = s
 
     @property
-    def output_folder(self):
+    def output_folder(self) -> str:
         return self._output_folder
 
     @output_folder.setter
-    def output_folder(self, s) -> None:
+    def output_folder(self, s: str) -> None:
         self._output_folder = s
 
-    def __reset(self):
+    def __reset(self) -> None:
         """
         All objects share class or static variables.
         An instance or non-static variables are different for different objects (every object has a copy).
@@ -75,7 +73,14 @@ class HeatmapComputationProcessor:
         self._suffix = ""
         self._output_folder = None
 
-    def setup(self, cohort):
+    def setup(self, cohort) -> None:
+        """
+        Iterates over all patients belonging to the cohort for asserting the existence of an annotation mask of the
+        structure of interest, registered in the atlas-space.
+        A warning is raised for each patient were a proper annotation mask cannot be found, for visual inspection.
+        :param cohort: Container for all loaded patients.
+        :return: None
+        """
         self.cohort = cohort
 
         for p in list(self.cohort.patients.keys()):
@@ -85,11 +90,23 @@ class HeatmapComputationProcessor:
             else:
                 self.mask_filenames.append(mask_fn)
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Generates the location heatmap for the cohort of interest, whereby six elements are created:
+            * heatmap_cumulative.nii.gz: for each voxel, the likelihood is expressed as the total number of patients featuring the object of interest in that location
+            * heatmap_percentages.nii.gz: for each voxel, the likelihood is expressed as the percentages of patients featuring the object of interest in that location over the total number of patients in the cohort
+            * heatmap_centroids_cumulative.nii.gz: same as the first file, except that only a 3x3x3 pixels centroid is used to represent each object of interest
+            * heatmap_centroids_percentages.nii.gz: same as the second file, except that only a 3x3x3 pixels centroid is used to represent each object of interest
+            * heatmap_patient_ids.nii.gz: (debug file) where the centroid of each object of interest is marked with the patient id, for an easier identification and correction of outliers
+            * patients_ids_lut.csv: (debug file) a look-up-table is provided for mapping each patient internal id with the corresponding patient folder name.
+        In the case of centroids generation with multifocal objects of interest, a centroid is created for each foci.
+        :return: Nothing, the appropriate files are saved on disk directly
+        """
         atlas_ni = nib.load(SharedResources.getInstance().mni_atlas_filepath_T1)
         atlas = atlas_ni.get_data()
         heatmap = np.zeros(atlas.shape)
         heatmap_centroids = np.zeros(atlas.shape)
+
         # The pids are a simply ascending counter. Should a look-up-table between counter and patient_id be saved on disk?
         heatmap_pids = np.zeros(atlas.shape).astype(np.uint16)
 
