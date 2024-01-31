@@ -1,0 +1,30 @@
+# use glob syntax.
+syntax: glob
+
+*.elc
+*.pyc
+*~
+.idea/
+*.xml
+os
+numpy
+*.h5
+*.mhd
+*.raw
+*lymphnodes*
+/*venv
+*.ini
+*.sqlite3
+/__pycache__
+*.txt
+/models
+/dataset
+/tensorboard-logs
+/lightning_logs
+/*venv-debug
+/selfcheck
+/http
+*.nii
+*.nii.gz
+/venv*
+*.nrrd
