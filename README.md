@@ -19,12 +19,12 @@ pip install git+https://github.com/raidionics/raidionics_maps.git
 <div style="display: flex;">
   <div style="flex: 1; margin-right: 20px;">
 
-| Operating System | Status                                                                                                                                                                                            |
-|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Windows**      | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_windows.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_windows.yml)     |
-| **Ubuntu**       | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_ubuntu.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_ubuntu.yml)       |
-| **macOS**        | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_macos.yml)         |
-| **macOS ARM**    | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos_arm.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_macos_arm.yml) |
+| Operating System | Status                                                                                                                                                                                                |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Windows**      | [![Build Windows](https://github.com/dbouget/raidionics_maps/actions/workflows/build_windows.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_windows.yml)       |
+| **Ubuntu**       | [![Build Ubuntu](https://github.com/dbouget/raidionics_maps/actions/workflows/build_ubuntu.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_ubuntu.yml)          |
+| **macOS**        | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_macos.yml)             |
+| **macOS ARM**    | [![Build macOS ARM](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos_arm.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_macos_arm.yml) |
   </div>
 </div>
 
