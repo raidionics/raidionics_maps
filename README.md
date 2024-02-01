@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 [![](https://img.shields.io/badge/python-3.8|3.9|3.10|3.11|3.12-blue.svg)](https://www.python.org/downloads/)
 [![Paper](https://zenodo.org/badge/DOI/10.3389/fneur.2022.932219.svg)](https://www.frontiersin.org/articles/10.3389/fneur.2022.932219/full)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/dbouget/7560fe410db03e384a45ddc77bbe9a57/01_heatmap_generation_example.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/dbouget/5602f523eeae8ff5be37e90f2ec5e0a3/01_heatmap_generation_example.ipynb)
 
 The code corresponds to the Raidionics backend for creating population-based maps from cohorts.
 The module can either be used as a Python library or as CLI.
@@ -37,9 +37,10 @@ Below are Jupyter Notebooks including simple examples on how to get started.
 <div style="display: flex;">
   <div style="flex: 1; margin-right: 20px;">
 
-| Notebook             | Colab                                                                                                                                                                                                                                     | GitHub                                                                                                                                                                                         |
-|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Location heatmap** | <a href="" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> | [![View on GitHub](https://img.shields.io/badge/View%20on%20GitHub-blue?logo=github)](https://github.com/raidionics/raidionics_maps/blob/master/notebooks/01_heatmap_generation_example.ipynb) |
+| Notebook                              | Colab                                                                                                                                                                                                                                     | GitHub                                                                                                                                                                                                           |
+|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Overall location heatmap**          | <a href="https://colab.research.google.com/gist/dbouget/5602f523eeae8ff5be37e90f2ec5e0a3/01_heatmap_generation_example.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> | [![View on GitHub](https://img.shields.io/badge/View%20on%20GitHub-blue?logo=github)](https://github.com/raidionics/raidionics_maps/blob/master/notebooks/01_heatmap_generation_example.ipynb)                   |
+| **Population-based location heatmap** | <a href="https://colab.research.google.com/gist/dbouget/42c3bc2cd0581a44351db357d95c1ed3/02_heatmap_generation_population_subset_example.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> | [![View on GitHub](https://img.shields.io/badge/View%20on%20GitHub-blue?logo=github)](https://github.com/raidionics/raidionics_maps/blob/master/notebooks/02_heatmap_generation_population_subset_example.ipynb) |
 
   </div>
 </div>
@@ -47,7 +48,7 @@ Below are Jupyter Notebooks including simple examples on how to get started.
 ### [Usage](https://github.com/raidionics/raidionics_maps#usage)
 
 In the following, a description of how the data should be organized on disk is provided, and a test dataset can
-be downloaded [here](https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsMaps_UnitTest1.zip).
+be downloaded [here](https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsMaps-UnitTest1.zip).
 
 <details>
 <summary>
