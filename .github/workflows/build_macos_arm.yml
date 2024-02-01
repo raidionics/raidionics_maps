@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  MACOSX_DEPLOYMENT_TARGET: 11.0
+  MACOSX_DEPLOYMENT_TARGET: 14.0
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
         include:
           - os: macos-14
             TARGET: macos
-            CMD_BUILD: export MACOSX_DEPLOYMENT_TARGET=11.0 && python3 setup.py bdist_wheel --plat-name macosx_11_0_arm
+            CMD_BUILD: export MACOSX_DEPLOYMENT_TARGET=14.0 && python3 setup.py bdist_wheel --plat-name macosx_14_0_arm
 
     steps:
       - uses: actions/checkout@v3
@@ -29,7 +29,7 @@ jobs:
       - name: Setup pyenv
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-          MACOSX_DEPLOYMENT_TARGET: 11.0
+          MACOSX_DEPLOYMENT_TARGET: 14.0
           PYTHON_CONFIGURE_OPTS: "--enable-framework"
           CFLAGS: "-Wno-implicit-function-declaration"
           LDFLAGS: "-L/usr/local/opt/zlib/lib"
