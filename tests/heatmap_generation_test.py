@@ -24,10 +24,9 @@ def heatmap_generation_test():
     if os.path.exists(test_dir):
         shutil.rmtree(test_dir)
     os.makedirs(test_dir)
-    os.makedirs(os.path.join(test_dir, 'Results'))
 
     try:
-        resources_url = 'https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsMaps_UnitTest1.zip'
+        resources_url = 'https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsMaps-UnitTest1.zip'
 
         archive_dl_dest = os.path.join(test_dir, 'resources.zip')
         headers = {}
@@ -40,7 +39,7 @@ def heatmap_generation_test():
         with zipfile.ZipFile(archive_dl_dest, 'r') as zip_ref:
             zip_ref.extractall(test_dir)
 
-        if not os.path.exists(os.path.join(test_dir, 'Input_dataset')):
+        if not os.path.exists(os.path.join(test_dir, 'Cohort_UnitTest1')):
             raise ValueError('Resources download or extraction failed, content not available on disk.')
     except Exception as e:
         logging.error("Error during resources download with: \n {}.\n".format(traceback.format_exc()))
@@ -52,8 +51,8 @@ def heatmap_generation_test():
         unit_test_config = configparser.ConfigParser()
         unit_test_config.add_section('Default')
         unit_test_config.set('Default', 'task', 'heatmap')
-        unit_test_config.set('Default', 'input_folder', os.path.join(test_dir, 'Input_dataset'))
-        unit_test_config.set('Default', 'output_folder', os.path.join(test_dir, 'Results'))
+        unit_test_config.set('Default', 'input_folder', os.path.join(test_dir, 'Cohort_UnitTest1'))
+        unit_test_config.set('Default', 'output_folder', os.path.join(test_dir, 'Cohort_UnitTest1_Output'))
         unit_test_config.add_section('Maps')
         unit_test_config.set('Maps', 'input_folder', os.path.join(test_dir, 'label_tumor.nii.gz'))
         config_filename = os.path.join(test_dir, 'config.ini')

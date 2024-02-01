@@ -1,8 +1,10 @@
 import os
 import numpy as np
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 import traceback
+import pandas as pd
 from .PatientStructure import Patient
+from ..Utils.resources import SharedResources
 
 
 class Cohort:
@@ -13,6 +15,7 @@ class Cohort:
     _input_folderpath = None  # Path containing the input data
     _output_folderpath = None  # Path where the computed results will be stored
     _patients = {}  # Dictionary holding all patients belonging to the cohort, as PatientStructure objects
+    _extra_patients_parameters = None  #
 
     def __init__(self, id: str, input_folder: str, output_folder: str) -> None:
         """
@@ -38,6 +41,7 @@ class Cohort:
         self._input_folderpath = None
         self._output_folderpath = None
         self._patients = {}
+        self._extra_patients_parameters = None
 
     @property
     def unique_id(self) -> str:
@@ -46,6 +50,14 @@ class Cohort:
     @property
     def input_folderpath(self) -> str:
         return self._input_folderpath
+
+    @property
+    def extra_patients_parameters(self) -> Union[None, pd.DataFrame]:
+        return self._extra_patients_parameters
+
+    @extra_patients_parameters.setter
+    def extra_patients_parameters(self, df: pd.DataFrame) -> None:
+        self._extra_patients_parameters = df
 
     @property
     def patients(self) -> Dict[str, Patient]:
@@ -78,3 +90,8 @@ class Cohort:
             except Exception as e:
                 print('Patient parsing from disk failed for folder: {}. Collected: \n'.format(p))
                 print('{}'.format(traceback.format_exc()))
+
+        if SharedResources.getInstance().maps_extra_parameters_filename is not None and os.path.exists(SharedResources.getInstance().maps_extra_parameters_filename):
+            self.extra_patients_parameters = pd.read_csv(SharedResources.getInstance().maps_extra_parameters_filename)
+            # Casting the Patient identifiers column as string type
+            self.extra_patients_parameters['Patient'] = self.extra_patients_parameters['Patient'].astype(str)

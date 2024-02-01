@@ -7,6 +7,7 @@ import numpy as np
 import csv
 import sys
 import os
+from copy import deepcopy
 import scipy.ndimage.measurements as smeas
 from scipy.ndimage import measurements
 from skimage.measure import regionprops
@@ -23,12 +24,15 @@ class HeatmapComputationProcessor:
     _cohort = None  # Placeholder for all loaded patients belonging to the cohort of interest
     _mask_filenames = []  # List of strings indicating the filepaths for all annotation masks to use to generate the location heatmap
     _suffix = ""  # Specific name to append to the generated heatmap files
-    _output_folder = None  # Path designated the folder where all the computed results are to be stored
+    _output_directory = None  # Overall directory designating the location where all the computed results are to be stored
+    _output_folder = None
 
     def __init__(self, suffix=""):
         self.__reset()
         self._suffix = suffix
-        self.output_folder = os.path.join(SharedResources.getInstance().maps_output_folder, 'Heatmaps')
+        self.output_directory = os.path.join(SharedResources.getInstance().maps_output_folder, 'Heatmaps')
+        os.makedirs(self.output_directory, exist_ok=True)
+        self.output_folder = os.path.join(self.output_directory, 'Overall')
         os.makedirs(self.output_folder, exist_ok=True)
 
     @property
@@ -56,6 +60,14 @@ class HeatmapComputationProcessor:
         self._suffix = s
 
     @property
+    def output_directory(self) -> str:
+        return self._output_directory
+
+    @output_directory.setter
+    def output_directory(self, s: str) -> None:
+        self._output_directory = s
+
+    @property
     def output_folder(self) -> str:
         return self._output_folder
 
@@ -71,6 +83,7 @@ class HeatmapComputationProcessor:
         self.cohort = None
         self._mask_filenames = []
         self._suffix = ""
+        self._output_directory = None
         self._output_folder = None
 
     def setup(self, cohort) -> None:
@@ -92,6 +105,53 @@ class HeatmapComputationProcessor:
 
     def run(self) -> None:
         """
+
+        :return:
+        """
+        logging.info("Computing location heatmap for the complete cohort!")
+        self.__run()
+        for d in SharedResources.getInstance().maps_distribution_dense_parameters:
+            params = d.split(',')
+            thresholds = [float(x) for x in params[1].split('-')]
+            limits = [None, thresholds[0]]
+            rparams = [params[0], limits]
+            self._suffix = '_' + params[0] + '<' + str(thresholds[0])
+            self.output_folder = os.path.join(self.output_directory, 'Population' + self._suffix)
+            os.makedirs(self.output_folder, exist_ok=True)
+            logging.info("Computing location heatmap for patients with {} under {}".format(params[0], str(thresholds[0])))
+            self.__run(dense_parameters=rparams)
+            for i, thr in enumerate(thresholds[1:-1]):
+                limits = [thresholds[i-1], thr]
+                rparams = [params[0], limits]
+                self._suffix = '_' + params[0] + '_Range' + str(rparams[0]) + '_' + str(rparams[1])
+                self.output_folder = os.path.join(self.output_directory, 'Population' + self._suffix)
+                os.makedirs(self.output_folder, exist_ok=True)
+                logging.info(
+                    "Computing location heatmap for patients with {} in the range [{}, {}]".format(params[0], str(rparams[0]), str(rparams[1])))
+                self.__run(dense_parameters=rparams)
+            limits = [thresholds[-1], None]
+            rparams = [params[0], limits]
+            self._suffix = '_' + params[0] + '>=' + str(thresholds[-1])
+            self.output_folder = os.path.join(self.output_directory, 'Population' + self._suffix)
+            os.makedirs(self.output_folder, exist_ok=True)
+            logging.info("Computing location heatmap for patients with {} over {}".format(params[0], str(thresholds[-1])))
+            self.__run(dense_parameters=rparams)
+        for c in SharedResources.getInstance().maps_distribution_categorical_parameters:
+            params = c.split(',')
+            if params[1].strip() == '':
+                cat = list(np.unique(self.cohort.extra_patients_parameters[params[0]].values))
+            else:
+                cat = [params[1]]
+            for cc in cat:
+                rparams = [params[0], cc]
+                self._suffix = '_' + params[0] + '-' + cc
+                self.output_folder = os.path.join(self.output_directory, 'Population' + self._suffix)
+                os.makedirs(self.output_folder, exist_ok=True)
+                logging.info("Computing location heatmap for patients with {} as {}".format(params[0], cc))
+                self.__run(cat_parameters=rparams)
+
+    def __run(self, dense_parameters=None, cat_parameters=None) -> None:
+        """
         Generates the location heatmap for the cohort of interest, whereby six elements are created:
             * heatmap_cumulative.nii.gz: for each voxel, the likelihood is expressed as the total number of patients featuring the object of interest in that location
             * heatmap_percentages.nii.gz: for each voxel, the likelihood is expressed as the percentages of patients featuring the object of interest in that location over the total number of patients in the cohort
@@ -100,6 +160,8 @@ class HeatmapComputationProcessor:
             * heatmap_patient_ids.nii.gz: (debug file) where the centroid of each object of interest is marked with the patient id, for an easier identification and correction of outliers
             * patients_ids_lut.csv: (debug file) a look-up-table is provided for mapping each patient internal id with the corresponding patient folder name.
         In the case of centroids generation with multifocal objects of interest, a centroid is created for each foci.
+        :param: dense_parameters
+        :param: cat_parameters
         :return: Nothing, the appropriate files are saved on disk directly
         """
         atlas_ni = nib.load(SharedResources.getInstance().mni_atlas_filepath_T1)
@@ -115,6 +177,21 @@ class HeatmapComputationProcessor:
         for i, p in enumerate(tqdm(self.cohort.patients)):
             patient = self.cohort.patients[p]
             pid = patient.patient_id
+            if dense_parameters is not None or cat_parameters is not None:
+                if dense_parameters is not None and cat_parameters is None:
+                    param_value = self.cohort.extra_patients_parameters.loc[self.cohort.extra_patients_parameters['Patient'] == pid][dense_parameters[0]].values[0]
+                    param_limits = dense_parameters[1]
+                    if param_limits[0] is None and param_value > param_limits[1]:
+                        continue
+                    elif param_limits[1] is None and param_value <= param_limits[0]:
+                        continue
+                    elif ((param_limits[0] is not None and param_value < param_limits[0]) and
+                          (param_limits[1] is not None and param_value > param_limits[1])):
+                        continue
+                elif dense_parameters is None and cat_parameters is not None:
+                    param_value = self.cohort.extra_patients_parameters.loc[self.cohort.extra_patients_parameters['Patient'] == pid][cat_parameters[0]].values[0]
+                    if param_value != cat_parameters[1]:
+                        continue
             fl = patient.registered_label_filepaths
             labels = None
             try:

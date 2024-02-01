@@ -47,6 +47,8 @@ class SharedResources:
         self.maps_gt_files_suffix = ''
         self.maps_extra_parameters_filename = ''
         self.maps_use_registered_data = False
+        self.maps_distribution_dense_parameters = []
+        self.maps_distribution_categorical_parameters = []
 
     def set_environment(self, config_filename):
         self.config = configparser.ConfigParser()
@@ -83,15 +85,16 @@ class SharedResources:
             if self.config['Default']['output_folder'].split('#')[0].strip() != '':
                 self.maps_output_folder = self.config['Default']['output_folder'].split('#')[0].strip()
 
-    def __parse_maps_parameters(self):
+    def __parse_maps_parameters(self) -> None:
         """
-        Parse the user-selected configuration parameters linked to the study process (plotting and visualization).
-        If empty, the study results will be saved in the studies_input_folder location.
-        :param: studies_task: identifier for the study script to run. Each identified should link to a python file in
-        the /Studies sub-directory.
-        :param: studies_extra_parameters_filename: resources file containing patient-specific information, for example
-        the tumor volume, data origin, etc... for in-depth results analysis.
-        :return:
+        Parse the user-selected configuration parameters linked to the location maps creation process.
+        :param: gt_files_suffix
+        :param: maps_extra_parameters_filename: resources file containing patient-specific information, for example
+        the tumor volume, data origin, etc... for in-depth analysis.
+        :param: use_registered_data
+        :param: distribution_dense_parameters
+        :param: distribution_categorical_parameters
+        :return: None
         """
         if self.config.has_option('Maps', 'gt_files_suffix'):
             if self.config['Maps']['gt_files_suffix'].split('#')[0].strip() != '':
@@ -104,6 +107,14 @@ class SharedResources:
         if self.config.has_option('Maps', 'use_registered_data'):
             if self.config['Maps']['use_registered_data'].split('#')[0].strip() != '':
                 self.maps_use_registered_data = True if self.config['Maps']['use_registered_data'].split('#')[0].strip().lower() == 'true' else False
+
+        if self.config.has_option('Maps', 'distribution_dense_parameters'):
+            if self.config['Maps']['distribution_dense_parameters'].split('#')[0].strip() != '':
+                self.maps_distribution_dense_parameters = self.config['Maps']['distribution_dense_parameters'].split('#')[0].strip().split('\\')
+
+        if self.config.has_option('Maps', 'distribution_categorical_parameters'):
+            if self.config['Maps']['distribution_categorical_parameters'].split('#')[0].strip() != '':
+                self.maps_distribution_categorical_parameters = self.config['Maps']['distribution_categorical_parameters'].split('#')[0].strip().split('\\')
 
     def __set_neuro_atlases_parameters(self):
         self.mni_atlas_filepath_T1 = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
