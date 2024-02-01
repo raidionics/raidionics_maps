@@ -165,7 +165,7 @@ class HeatmapComputationProcessor:
         :return: Nothing, the appropriate files are saved on disk directly
         """
         atlas_ni = nib.load(SharedResources.getInstance().mni_atlas_filepath_T1)
-        atlas = atlas_ni.get_data()
+        atlas = atlas_ni.fget_data()[:]
         heatmap = np.zeros(atlas.shape)
         heatmap_centroids = np.zeros(atlas.shape)
 
