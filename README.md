@@ -6,45 +6,45 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/dbouget/7560fe410db03e384a45ddc77bbe9a57/01_heatmap_generation_example.ipynb)
 
 The code corresponds to the Raidionics backend for creating population-based maps from cohorts.
-The module can either be used as a Python library, as CLI, or as Docker container.
+The module can either be used as a Python library or as CLI.
 
-## [Installation](https://github.com/dbouget/raidionics_maps#installation)
+## [Installation](https://github.com/raidionics/raidionics_maps#installation)
 
 ```
-pip install git+https://github.com/dbouget/raidionics_maps.git
+pip install git+https://github.com/raidionics/raidionics_maps.git
 ```
 
-## [Continuous integration](https://github.com/dbouget/raidionics_maps#continuous-integration)
+## [Continuous integration](https://github.com/raidionics/raidionics_maps#continuous-integration)
 
 <div style="display: flex;">
   <div style="flex: 1; margin-right: 20px;">
 
-| Operating System | Status                                                                                                                                                                                                                       |
-|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Windows**      | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_windows.yml/badge.svg)](https://github.com/dbouget/raidionics_maps/actions/workflows/build_windows.yml)                    |
-| **Ubuntu**       | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_ubuntu.yml/badge.svg)](https://github.com/dbouget/raidionics_maps/actions/workflows/build_ubuntu.yml)       |
-| **macOS**        | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos.yml/badge.svg)](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos.yml)         |
-| **macOS ARM**    | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos_arm.yml/badge.svg)](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos_arm.yml) |
+| Operating System | Status                                                                                                                                                                                            |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Windows**      | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_windows.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_windows.yml)     |
+| **Ubuntu**       | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_ubuntu.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_ubuntu.yml)       |
+| **macOS**        | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_macos.yml)         |
+| **macOS ARM**    | [![Build macOS](https://github.com/dbouget/raidionics_maps/actions/workflows/build_macos_arm.yml/badge.svg)](https://github.com/raidionics/raidionics_maps/actions/workflows/build_macos_arm.yml) |
   </div>
 </div>
 
-## [Getting started](https://github.com/dbouget/raidionics_maps#getting-started)
+## [Getting started](https://github.com/raidionics/raidionics_maps#getting-started)
 
-### [Notebooks](https://github.com/dbouget/raidionics_maps#notebooks)
+### [Notebooks](https://github.com/raidionics/raidionics_maps#notebooks)
 
 Below are Jupyter Notebooks including simple examples on how to get started.
 
 <div style="display: flex;">
   <div style="flex: 1; margin-right: 20px;">
 
-| Notebook             | Colab                                                                                                                                                                                                                                     | GitHub                                                                                                                                                                                      |
-|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Location heatmap** | <a href="" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> | [![View on GitHub](https://img.shields.io/badge/View%20on%20GitHub-blue?logo=github)](https://github.com/dbouget/raidionics_maps/blob/master/notebooks/01_heatmap_generation_example.ipynb) |
+| Notebook             | Colab                                                                                                                                                                                                                                     | GitHub                                                                                                                                                                                         |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Location heatmap** | <a href="" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> | [![View on GitHub](https://img.shields.io/badge/View%20on%20GitHub-blue?logo=github)](https://github.com/raidionics/raidionics_maps/blob/master/notebooks/01_heatmap_generation_example.ipynb) |
 
   </div>
 </div>
 
-### [Usage](https://github.com/dbouget/raidionics_maps#usage)
+### [Usage](https://github.com/raidionics/raidionics_maps#usage)
 
 In the following, a description of how the data should be organized on disk is provided, and a test dataset can
 be downloaded [here](https://github.com/raidionics/Raidionics-models/releases/download/1.2.0/Samples-RaidionicsMaps_UnitTest1.zip).
@@ -52,10 +52,10 @@ be downloaded [here](https://github.com/raidionics/Raidionics-models/releases/do
 <details>
 <summary>
 
-#### [Folder and data structures and naming conventions](https://github.com/dbouget/raidionics_maps#folder-and-data-structures-and-naming-conventions)
+#### [Folder and data structures and naming conventions](https://github.com/raidionics/raidionics_maps#folder-and-data-structures-and-naming-conventions)
 </summary>
 
-#### [1.1 Original data folder structure](https://github.com/dbouget/raidionics_maps#11-original-data-folder-structure)
+#### [1.1 Original data folder structure](https://github.com/raidionics/raidionics_maps#11-original-data-folder-structure)
 The main data directory containing the original 3D volumes and corresponding annotations for the class of
 interest is expected to resemble the following structure:
 
@@ -71,7 +71,7 @@ interest is expected to resemble the following structure:
             ├── PatXXX_MRI.nii.gz
             └── PatXXX_MRI_label_tumor.nii.gz
 
-#### [1.2 Results folder structure](https://github.com/dbouget/raidionics_maps#12-inference-results-folder-structure)
+#### [1.2 Results folder structure](https://github.com/raidionics/raidionics_maps#12-inference-results-folder-structure)
 Results will be stored inside a sub-folder for each patient, following the same pattern as the input folder structure.
 A registration folder is kept inside each patient sub-folder, for easy re-use and cohort inclusion, to update the
 location heatmaps.
@@ -102,7 +102,7 @@ location heatmaps.
 <details>
 <summary>
 
-### [Installation](https://github.com/dbouget/raidionics_maps#installation)
+### [Installation](https://github.com/raidionics/raidionics_maps#installation)
 </summary>
 Create a virtual environment using at least Python 3.8, and install all dependencies from
 the requirements.txt file.
@@ -129,17 +129,31 @@ found in _/Utils/resources.py_.
 <details>
 <summary>
 
-### [Process](https://github.com/dbouget/raidionics_maps#process)
+### [CLI](https://github.com/raidionics/raidionics_maps#cli)
 </summary>
-To run, you need to supply the configuration file as parameter.
 
 ```
-  python main.py -c main_config.ini (-v debug)
+raidionicsmaps -c CONFIG (-v debug)
+```
+
+CONFIG should point to a configuration file (*.ini), specifying all runtime parameters,
+according to the pattern from [**blank_main_config.ini**](https://github.com/raidionics/raidionics_maps/blob/master/blank_main_config.ini).
+</details>
+
+<details>
+<summary>
+
+### [Python module](https://github.com/raidionics/raidionics_maps#python-module)
+</summary>
+
+```
+from raidionicsmaps.compute import compute
+compute(config_filename="/path/to/main_config.ini")
 ```
 
 </details>
 
-## [How to cite](https://github.com/dbouget/raidionics_maps#how-to-cite)
+## [How to cite](https://github.com/raidionics/raidionics_maps#how-to-cite)
 
 If you are using Raidionics in your research, please cite the following references.
 
