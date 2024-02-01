@@ -37,7 +37,7 @@ setup(
     version='1.0.0',
     author='David Bouget (david.bouget@sintef.no)',
     license='BSD 2-Clause',
-    description='Raidionics backend for the generation of population-based maps',
+    description='Raidionics backend for the generation of population-based location maps',
     long_description=long_description,
     long_description_content_type="text/markdown",
 )
