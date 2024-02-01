@@ -97,7 +97,7 @@ class HeatmapComputationProcessor:
         self.cohort = cohort
 
         for p in list(self.cohort.patients.keys()):
-            mask_fn = self.cohort.patients[p].registered_label_filepaths
+            mask_fn = self.cohort.patients[p].registered_label_filepath
             if mask_fn is None or not os.path.exists(mask_fn):
                 logging.warning("Registered annotation mask missing for {}".format(self.cohort.patients[p].patient_id))
             else:
@@ -192,7 +192,7 @@ class HeatmapComputationProcessor:
                     param_value = self.cohort.extra_patients_parameters.loc[self.cohort.extra_patients_parameters['Patient'] == pid][cat_parameters[0]].values[0]
                     if param_value != cat_parameters[1]:
                         continue
-            fl = patient.registered_label_filepaths
+            fl = patient.registered_label_filepath
             labels = None
             try:
                 labels_ni = nib.load(fl)

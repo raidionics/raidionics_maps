@@ -79,35 +79,35 @@ class Patient:
         self._input_folderpath = input_folderpath
 
     @property
-    def volume_filepaths(self) -> str:
+    def volume_filepath(self) -> str:
         return self._volume_filepath
 
-    @volume_filepaths.setter
-    def volume_filepaths(self, volume_filepaths: str) -> None:
-        self._volume_filepath = volume_filepaths
+    @volume_filepath.setter
+    def volume_filepath(self, volume_filepath: str) -> None:
+        self._volume_filepath = volume_filepath
 
     @property
-    def label_filepaths(self) -> str:
+    def label_filepath(self) -> str:
         return self._label_filepath
 
-    @label_filepaths.setter
-    def label_filepaths(self, label_filepaths: str) -> None:
-        self._label_filepath = label_filepaths
+    @label_filepath.setter
+    def label_filepath(self, label_filepath: str) -> None:
+        self._label_filepath = label_filepath
 
     @property
-    def registered_volume_filepaths(self) -> str:
+    def registered_volume_filepath(self) -> str:
         return self._registered_volume_filepath
 
-    @registered_volume_filepaths.setter
-    def registered_volume_filepaths(self, filepath: str) -> None:
+    @registered_volume_filepath.setter
+    def registered_volume_filepath(self, filepath: str) -> None:
         self._registered_volume_filepath = filepath
 
     @property
-    def registered_label_filepaths(self) -> str:
+    def registered_label_filepath(self) -> str:
         return self._registered_label_filepath
 
-    @registered_label_filepaths.setter
-    def registered_label_filepaths(self, filepath: str) -> None:
+    @registered_label_filepath.setter
+    def registered_label_filepath(self, filepath: str) -> None:
         self._registered_label_filepath = filepath
 
     @property
@@ -132,8 +132,8 @@ class Patient:
                     volume_files.append(f)
             break
 
-        self.volume_filepaths = os.path.join(self.input_folderpath, volume_files[0])
-        self.label_filepaths = os.path.join(self.input_folderpath, label_files[0])
+        self.volume_filepath = os.path.join(self.input_folderpath, volume_files[0])
+        self.label_filepath = os.path.join(self.input_folderpath, label_files[0])
 
         res_patient_folder = os.path.join(SharedResources.getInstance().maps_output_folder, self.patient_id)
         if os.path.exists(res_patient_folder):
@@ -177,15 +177,15 @@ class Patient:
             reg_labels_fn = os.path.join(self.output_folderpath,
                                          'input_reg_mni_' + SharedResources.getInstance().maps_gt_files_suffix)
             if os.path.exists(reg_input_fn):
-                self.registered_volume_filepaths = reg_input_fn
+                self.registered_volume_filepath = reg_input_fn
             if os.path.exists(reg_labels_fn):
-                self.registered_label_filepaths = reg_labels_fn
+                self.registered_label_filepath = reg_labels_fn
 
         if SharedResources.getInstance().maps_use_registered_data:
-            if self.registered_volume_filepaths is None:
-                self.registered_volume_filepaths = self.volume_filepaths
-            if self.registered_label_filepaths is None:
-                self.registered_label_filepaths = self.label_filepaths
+            if self.registered_volume_filepath is None:
+                self.registered_volume_filepath = self.volume_filepath
+            if self.registered_label_filepath is None:
+                self.registered_label_filepath = self.label_filepath
 
     def include_registration(self, reg_uid: str, registration: Registration) -> None:
         self.registrations[reg_uid] = registration

@@ -52,7 +52,7 @@ class RegistrationStep():
         """
         self.patient_parameters = patient_parameters
         try:
-            self._moving_volume_filepath = self.patient_parameters.volume_filepaths
+            self._moving_volume_filepath = self.patient_parameters.volume_filepath
             self._fixed_volume_filepath = SharedResources.getInstance().mni_atlas_filepath_T1
         except Exception as e:
             logging.error("[RegistrationStep] Setting up process failed with {}".format(traceback.format_exc()))
@@ -69,7 +69,7 @@ class RegistrationStep():
                 self.__registration(self._fixed_volume_filepath, self._moving_volume_filepath)
 
             # Flag for skipping applying registration to annotation files if they exist already
-            if self.patient_parameters.registered_label_filepaths is None:
+            if self.patient_parameters.registered_label_filepath is None:
                 self.__apply_registration()
 
             self._registration_runner.clear_cache()
@@ -145,12 +145,12 @@ class RegistrationStep():
             shutil.move(reg_input_fn, os.path.join(self.patient_parameters.output_folderpath, 'input_reg_mni.nii.gz'))
             self.patient_parameters.registered_volume_filepaths = os.path.join(self.patient_parameters.output_folderpath,
                                                                                'input_reg_mni.nii.gz')
-            moving_filepath = self.patient_parameters.label_filepaths
+            moving_filepath = self.patient_parameters.label_filepath
             reg_anno_fn = self._registration_runner.apply_registration_transform(fixed=self._fixed_volume_filepath,
                                                                                  moving=moving_filepath)
             reg_base_name = 'input_reg_mni_' + SharedResources.getInstance().maps_gt_files_suffix
             shutil.move(reg_anno_fn, os.path.join(self.patient_parameters.output_folderpath, reg_base_name))
-            self.patient_parameters.registered_label_filepaths = os.path.join(self.patient_parameters.output_folderpath,
+            self.patient_parameters.registered_label_filepath = os.path.join(self.patient_parameters.output_folderpath,
                                                                               reg_base_name)
         except Exception as e:
             logging.error("[RegistrationStep] Apply registration failed with: {}.".format(traceback.format_exc()))

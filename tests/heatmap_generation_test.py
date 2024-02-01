@@ -55,6 +55,7 @@ def heatmap_generation_test():
         unit_test_config.set('Default', 'output_folder', os.path.join(test_dir, 'Cohort_UnitTest1_Output'))
         unit_test_config.add_section('Maps')
         unit_test_config.set('Maps', 'input_folder', os.path.join(test_dir, 'label_tumor.nii.gz'))
+        unit_test_config.set('Maps', 'use_registered_data', 'true')
         config_filename = os.path.join(test_dir, 'config.ini')
         with open(config_filename, 'w') as outfile:
             unit_test_config.write(outfile)
