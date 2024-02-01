@@ -43,7 +43,8 @@ def heatmap_generation_test():
             raise ValueError('Resources download or extraction failed, content not available on disk.')
     except Exception as e:
         logging.error("Error during resources download with: \n {}.\n".format(traceback.format_exc()))
-        shutil.rmtree(test_dir)
+        if os.path.exists(test_dir):
+            shutil.rmtree(test_dir)
         raise ValueError("Error during resources download.\n")
 
     logging.info("Preparing configuration file.\n")
@@ -54,7 +55,7 @@ def heatmap_generation_test():
         unit_test_config.set('Default', 'input_folder', os.path.join(test_dir, 'Cohort_UnitTest1'))
         unit_test_config.set('Default', 'output_folder', os.path.join(test_dir, 'Cohort_UnitTest1_Output'))
         unit_test_config.add_section('Maps')
-        unit_test_config.set('Maps', 'input_folder', os.path.join(test_dir, 'label_tumor.nii.gz'))
+        unit_test_config.set('Maps', 'gt_files_suffix', 'label_tumor.nii.gz')
         unit_test_config.set('Maps', 'use_registered_data', 'true')
         config_filename = os.path.join(test_dir, 'config.ini')
         with open(config_filename, 'w') as outfile:
@@ -65,10 +66,11 @@ def heatmap_generation_test():
         compute(config_filename)
 
         logging.info("Collecting and comparing results.\n")
-        heatmap_filename = os.path.join(test_dir, 'Results', 'Heatmaps', 'heatmap_percentages.nii.gz')
+        heatmap_filename = os.path.join(test_dir, 'Cohort_UnitTest1_Output', 'Heatmaps', 'Overall', 'heatmap_percentages.nii.gz')
         if not os.path.exists(heatmap_filename):
             logging.error("Heatmap generation unit test failed, no heatmap was generated.\n")
-            shutil.rmtree(test_dir)
+            if os.path.exists(test_dir):
+                shutil.rmtree(test_dir)
             raise ValueError("Heatmap generation unit test failed, no heatmap was generated.\n")
 
         logging.info("Heatmap generation CLI unit test started.\n")
@@ -88,23 +90,27 @@ def heatmap_generation_test():
                                        '--verbose', 'debug'])
         except Exception as e:
             logging.error("Error during heatmap generation CLI unit test with: \n {}.\n".format(traceback.format_exc()))
-            shutil.rmtree(test_dir)
+            if os.path.exists(test_dir):
+                shutil.rmtree(test_dir)
             raise ValueError("Error during heatmap generation CLI unit test.\n")
 
         logging.info("Collecting and comparing results.\n")
-        heatmap_filename = os.path.join(test_dir, 'Results', 'Heatmaps', 'heatmap_percentages.nii.gz')
+        heatmap_filename = os.path.join(test_dir, 'Cohort_UnitTest1_Output', 'Heatmaps', 'Overall', 'heatmap_percentages.nii.gz')
         if not os.path.exists(heatmap_filename):
             logging.error("Heatmap generation unit test failed, no heatmap was generated.\n")
-            shutil.rmtree(test_dir)
+            if os.path.exists(test_dir):
+                shutil.rmtree(test_dir)
             raise ValueError("Heatmap generation unit test failed, no heatmap was generated.\n")
         logging.info("Heatmap generation CLI unit test succeeded.\n")
     except Exception as e:
         logging.error("Error during heatmap generation unit test with: \n {}.\n".format(traceback.format_exc()))
-        shutil.rmtree(test_dir)
+        if os.path.exists(test_dir):
+            shutil.rmtree(test_dir)
         raise ValueError("Error during heatmap generation unit test with.\n")
 
     logging.info("Heatmap generation unit test succeeded.\n")
-    shutil.rmtree(test_dir)
+    if os.path.exists(test_dir):
+        shutil.rmtree(test_dir)
 
 
 heatmap_generation_test()

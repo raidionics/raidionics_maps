@@ -30,3 +30,4 @@ numpy
 *.nrrd
 /notebooks/.ipynb_checkpoints
 .ipynb_checkpoints
+raidionicsmaps.egg-info
