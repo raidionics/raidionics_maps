@@ -79,5 +79,3 @@ jobs:
 
       - name: Heatmap computation unit test
         run: cd ${{github.workspace}}/tests && python heatmap_generation_test.py
-
-
