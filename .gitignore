@@ -29,5 +29,6 @@ numpy
 /venv*
 *.nrrd
 /notebooks/.ipynb_checkpoints
+/notebooks/unit_tests_results_dir
 .ipynb_checkpoints
 raidionicsmaps.egg-info
