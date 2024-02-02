@@ -19,7 +19,7 @@ jobs:
         include:
           - os: macos-14
             TARGET: macos
-            CMD_BUILD: export MACOSX_DEPLOYMENT_TARGET=14.0 && python3 setup.py bdist_wheel --plat-name macosx_14_0_arm
+            CMD_BUILD: export MACOSX_DEPLOYMENT_TARGET=14.0 && python3 setup.py bdist_wheel --plat-name macosx_14_0_arm64
 
     steps:
       - uses: actions/checkout@v3
