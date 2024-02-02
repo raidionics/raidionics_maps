@@ -68,7 +68,7 @@ jobs:
           name: "Python wheel"
 
       - name: Install wheel
-        run: pip install --find-links=${{github.workspace}} raidionicsmaps-*
+        run: pip install --default-timeout=100 --find-links=${{github.workspace}} raidionicsmaps-*
         shell: bash
 
       - name: Test CLI
@@ -79,5 +79,3 @@ jobs:
 
       - name: Heatmap computation unit test
         run: cd ${{github.workspace}}/tests && python heatmap_generation_test.py
-
-
