@@ -19,7 +19,7 @@ jobs:
         include:
           - os: macos-14
             TARGET: macos
-            CMD_BUILD: export MACOSX_DEPLOYMENT_TARGET=14.0 && python3 setup.py bdist_wheel --plat-name macosx_11_0_arm64
+            CMD_BUILD: python3 setup.py bdist_wheel --plat-name macosx_11_0_arm64
 
     steps:
       - uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
         uses: "gabrielfalcao/pyenv-action@v13"
         with:
             default: "3.10"
-            command: export MACOSX_DEPLOYMENT_TARGET=11.0 && pip3 install -U pip3 wheel setuptools
+            command: pip3 install -U pip3 wheel setuptools
 
       - name: Collect submodules
         uses: actions/checkout@v3
