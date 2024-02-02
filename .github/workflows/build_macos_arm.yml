@@ -37,7 +37,7 @@ jobs:
           PKG_CONFIG_PATH: "/usr/local/opt/zlib/lib/pkgconfig"
         uses: "gabrielfalcao/pyenv-action@v13"
         with:
-            default: "3.10"
+            default: "3.8"
             command: pip3 install -U pip3 wheel setuptools
 
       - name: Collect submodules
@@ -65,14 +65,15 @@ jobs:
     strategy:
       matrix:
         os: [ macos-14 ]
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - name: Set up pyenv using Python ${{ matrix.python-version }}
+        uses: "gabrielfalcao/pyenv-action@v13"
         with:
-          python-version: ${{ matrix.python-version }}
+            default: ${{ matrix.python-version }}
+            command: pip3 install -U pip3 wheel setuptools
 
       - name: Download artifact
         uses: actions/download-artifact@v3
