@@ -5,7 +5,9 @@ from typing import List
 import logging
 
 from ..Utils.resources import SharedResources
+from ..Utils.utils import get_metrics_target_class
 from .RegistrationStructure import Registration
+from .MetricsStructure import Metrics
 
 
 class Patient:
@@ -18,10 +20,12 @@ class Patient:
     _output_folderpath = None  # Folder containing the generated patient data
     _volume_filepath = None  # Filepath to the input radiological volume
     _label_filepath = None  # Filepath to the input annotation mask
+    _mask_filepath = None  # Filepath to the global anatomical region mask (e.g., brain, lungs)
     _registered_volume_filepath = None  # Filepath for the generated atlas-registered radiological volume
     _registered_label_filepath = None  # Filepath for the generated atlas-registered annotation mask
     _class_names = []  # Not used for now
     _registrations = {}  # Dictionary containing a RegistrationStructure with the transformation info for each registration, if multiple atlases are used over time
+    _metrics = {}  # Dictionary containing a MetricsStructure for each considered class object
 
     def __init__(self, id: str, patient_id: str, input_folder: str) -> None:
         """
@@ -53,10 +57,12 @@ class Patient:
         self._output_folderpath = None
         self._volume_filepath = None
         self._label_filepath = None
+        self._mask_filepath = None
         self._registered_volume_filepath = None
         self._registered_label_filepath = None
         self._class_names = None
         self._registrations = {}
+        self._metrics = {}
 
     @property
     def unique_id(self) -> str:
@@ -79,6 +85,14 @@ class Patient:
         self._input_folderpath = input_folderpath
 
     @property
+    def output_folderpath(self) -> str:
+        return self._output_folderpath
+
+    @output_folderpath.setter
+    def output_folderpath(self, output_folderpath: str) -> None:
+        self._output_folderpath = output_folderpath
+
+    @property
     def volume_filepath(self) -> str:
         return self._volume_filepath
 
@@ -93,6 +107,14 @@ class Patient:
     @label_filepath.setter
     def label_filepath(self, label_filepath: str) -> None:
         self._label_filepath = label_filepath
+
+    @property
+    def mask_filepath(self) -> str:
+        return self._mask_filepath
+
+    @mask_filepath.setter
+    def mask_filepath(self, mask_filepath: str) -> None:
+        self._mask_filepath = mask_filepath
 
     @property
     def registered_volume_filepath(self) -> str:
@@ -118,22 +140,31 @@ class Patient:
     def registrations(self) -> dict:
         return self._registrations
 
+    @property
+    def metrics(self) -> dict:
+        return self._metrics
+
     def __init_from_disk(self) -> None:
         """
         Iterating through the patient folder to identify the content.
         """
         volume_files = []
         label_files = []
+        mask_files = []
         for _, _, files in os.walk(self.input_folderpath):
             for f in files:
                 if SharedResources.getInstance().maps_gt_files_suffix in f:
                     label_files.append(f)
+                elif "brain" in f.lower().strip():
+                    mask_files.append(f)
                 else:
                     volume_files.append(f)
             break
 
         self.volume_filepath = os.path.join(self.input_folderpath, volume_files[0])
         self.label_filepath = os.path.join(self.input_folderpath, label_files[0])
+        if len(mask_files) != 0:
+            self.mask_filepath = os.path.join(self.input_folderpath, mask_files[0])
 
         res_patient_folder = os.path.join(SharedResources.getInstance().maps_output_folder, self.patient_id)
         if os.path.exists(res_patient_folder):
@@ -187,5 +218,27 @@ class Patient:
             if self.registered_label_filepath is None:
                 self.registered_label_filepath = self.label_filepath
 
+        if os.path.exists(os.path.join(self.output_folderpath,
+                                       "computed_metrics_" + get_metrics_target_class() + ".csv")):
+            metrics_target = get_metrics_target_class()
+            non_available_uid = True
+            metrics_uid = None
+            while non_available_uid:
+                metrics_uid = 'M' + str(np.random.randint(0, 10000))
+                if metrics_uid not in list(self.registrations.keys()):
+                    non_available_uid = False
+
+            metrics = Metrics(uid=metrics_uid, input_folder=self.output_folderpath)
+            self.include_metrics(metrics_target, metrics)
+
     def include_registration(self, reg_uid: str, registration: Registration) -> None:
         self.registrations[reg_uid] = registration
+
+    def include_metrics(self, target_class: str, metrics: Metrics) -> None:
+        self.metrics[target_class] = metrics
+
+    def is_metrics_for_class(self, target_class: str) -> bool:
+        return target_class in list(self.metrics.keys())
+
+    def get_metrics_for_class(self, target_class: str) -> Metrics:
+        return self.metrics[target_class]

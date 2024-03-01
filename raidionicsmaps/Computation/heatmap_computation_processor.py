@@ -111,7 +111,7 @@ class HeatmapComputationProcessor:
         logging.info("Computing location heatmap for the complete cohort!")
         self.__run()
         for d in SharedResources.getInstance().maps_distribution_dense_parameters:
-            params = d.split(',')
+            params = [x.strip() for x in d.split(',')]
             thresholds = [float(x) for x in params[1].split('-')]
             limits = [None, thresholds[0]]
             rparams = [params[0], limits]
@@ -137,7 +137,7 @@ class HeatmapComputationProcessor:
             logging.info("Computing location heatmap for patients with {} over {}".format(params[0], str(thresholds[-1])))
             self.__run(dense_parameters=rparams)
         for c in SharedResources.getInstance().maps_distribution_categorical_parameters:
-            params = c.split(',')
+            params = [x.strip() for x in c.split(',')]
             if params[1].strip() == '':
                 cat = list(np.unique(self.cohort.extra_patients_parameters[params[0]].values))
             else:

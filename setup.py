@@ -12,7 +12,7 @@ if platform.system() == 'Darwin' and platform.processor() == 'arm':   # Specific
     required.append('scikit-learn')
     required.append('statsmodels')
 else:
-    required.append('antspyx==0.3.8')
+    required.append('antspyx==0.4.2')
 
 setup(
     name='raidionicsmaps',
@@ -34,7 +34,7 @@ setup(
     install_requires=required,
     include_package_data=True,
     python_requires=">=3.8",
-    version='1.0.0',
+    version='1.1.0',
     author='David Bouget (david.bouget@sintef.no)',
     license='BSD 2-Clause',
     description='Raidionics backend for the generation of population-based location maps',

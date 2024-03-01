@@ -1,9 +1,12 @@
 import traceback
 import logging
+from tqdm import tqdm
 from .Computation.registration_step import RegistrationStep
 from .Computation.heatmap_computation_processor import HeatmapComputationProcessor
+from .Computation.metrics_computation_processor import MetricsComputationProcessor
 from .Structures.CohortStructure import Cohort
 from .Utils.resources import SharedResources
+from .Utils.io import download_model
 
 
 def compute(config_filename: str, logging_filename: str = None) -> None:
@@ -37,16 +40,26 @@ def compute(config_filename: str, logging_filename: str = None) -> None:
 
     if not SharedResources.getInstance().maps_use_registered_data:
         # Perform the step of co-registration for the whole cohort beforehand
-        for p in list(cohort.patients.keys()):
-            pat = cohort.patients[p]
-            processor = RegistrationStep()
-            processor.setup(pat)
-            pat = processor.execute()
-            cohort.patients[p] = pat
+        download_model("MRI_Sequence_Classifier")
+        download_model("MRI_Brain")
+        logging.info("Running registration to common atlas space.")
+        for p in tqdm(list(cohort.patients.keys())):
+            try:
+                pat = cohort.patients[p]
+                processor = RegistrationStep()
+                processor.setup(pat)
+                pat = processor.execute()
+                cohort.patients[p] = pat
+            except Exception as e:
+                continue
 
     try:
         if task == 'heatmap':
             processor = HeatmapComputationProcessor()
+            processor.setup(cohort)
+            processor.run()
+        elif task == 'metrics':
+            processor = MetricsComputationProcessor()
             processor.setup(cohort)
             processor.run()
         else:
