@@ -37,6 +37,7 @@ class SharedResources:
         self.home_path = ''
 
         self.task = None
+        self.system_models_folder = os.path.join(os.path.expanduser('~'), '.raidionics', 'resources', 'models')
         self.system_ants_backend = 'python'
         self.ants_root = None
         self.ants_reg_dir = None
@@ -49,6 +50,13 @@ class SharedResources:
         self.maps_use_registered_data = False
         self.maps_distribution_dense_parameters = []
         self.maps_distribution_categorical_parameters = []
+        self.maps_sequence_type = None
+
+        self.metrics_tumor_size = False
+        self.metrics_multifocality = False
+        self.metrics_brain_location = False
+        self.metrics_cortical_features_location = []
+        self.metrics_subcortical_features_location = []
 
     def set_environment(self, config_filename):
         self.config = configparser.ConfigParser()
@@ -63,6 +71,7 @@ class SharedResources:
 
         self.__parse_default_parameters()
         self.__parse_maps_parameters()
+        self.__parse_metrics_parameters()
         self.__set_neuro_atlases_parameters()
         self.__set_ants_parameters()
 
@@ -94,6 +103,7 @@ class SharedResources:
         :param: use_registered_data
         :param: distribution_dense_parameters
         :param: distribution_categorical_parameters
+        :param: sequence_type
         :return: None
         """
         if self.config.has_option('Maps', 'gt_files_suffix'):
@@ -115,6 +125,39 @@ class SharedResources:
         if self.config.has_option('Maps', 'distribution_categorical_parameters'):
             if self.config['Maps']['distribution_categorical_parameters'].split('#')[0].strip() != '':
                 self.maps_distribution_categorical_parameters = self.config['Maps']['distribution_categorical_parameters'].split('#')[0].strip().split('\\')
+
+        if self.config.has_option('Maps', 'sequence_type'):
+            if self.config['Maps']['sequence_type'].split('#')[0].strip() != '':
+                self.maps_sequence_type = self.config['Maps']['sequence_type'].split('#')[0].strip()
+
+    def __parse_metrics_parameters(self):
+        """
+        Parse the user-selected configuration parameters linked to the metrics computation
+        :param: metrics_tumor_size
+        :param: multifocality
+        :param: metrics_brain_location
+        :param: metrics_cortical_features_location
+        :param: metrics_subcortical_features_location
+        """
+        if self.config.has_option('Metrics', 'tumor_size'):
+            if self.config['Metrics']['tumor_size'].split('#')[0].strip() != '':
+                self.metrics_tumor_size = True if self.config['Metrics']['tumor_size'].split('#')[0].strip().lower() == 'true' else False
+
+        if self.config.has_option('Metrics', 'multifocality'):
+            if self.config['Metrics']['multifocality'].split('#')[0].strip() != '':
+                self.metrics_multifocality = True if self.config['Metrics']['multifocality'].split('#')[0].strip().lower() == 'true' else False
+
+        if self.config.has_option('Metrics', 'brain_location'):
+            if self.config['Metrics']['brain_location'].split('#')[0].strip() != '':
+                self.metrics_brain_location = True if self.config['Metrics']['brain_location'].split('#')[0].strip().lower() == 'true' else False
+
+        if self.config.has_option('Metrics', 'cortical_features_location'):
+            if self.config['Metrics']['cortical_features_location'].split('#')[0].strip() != '':
+                self.metrics_cortical_features_location = [x.strip() for x in self.config['Metrics']['cortical_features_location'].split('#')[0].strip().split(',')]
+
+        if self.config.has_option('Metrics', 'subcortical_features_location'):
+            if self.config['Metrics']['subcortical_features_location'].split('#')[0].strip() != '':
+                self.metrics_subcortical_features_location = [x.strip() for x in self.config['Metrics']['subcortical_features_location'].split('#')[0].strip().split(',')]
 
     def __set_neuro_atlases_parameters(self):
         self.mni_atlas_filepath_T1 = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),

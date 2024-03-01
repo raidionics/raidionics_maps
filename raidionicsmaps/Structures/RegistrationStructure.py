@@ -30,11 +30,11 @@ class Registration:
             os.makedirs(self._output_folder)
 
             for elem in fwd_paths:
-                dest_name = os.path.join(self._output_folder, 'forward_' + os.path.basename(elem))
+                dest_name = os.path.join(self._output_folder, os.path.basename(elem))
                 shutil.copyfile(elem, dest_name)
                 self._forward_filepaths.append(dest_name)
             for elem in inv_paths:
-                dest_name = os.path.join(self._output_folder, 'inverse_' + os.path.basename(elem))
+                dest_name = os.path.join(self._output_folder, os.path.basename(elem))
                 shutil.copyfile(elem, dest_name)
                 self._inverse_filepaths.append(dest_name)
 
